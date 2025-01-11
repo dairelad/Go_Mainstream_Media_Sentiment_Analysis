@@ -4,7 +4,7 @@ package main
 
 import (
 	"fmt"
-	"log"
+	//"log"
 	"strings"
 	"time"
 
@@ -51,52 +51,77 @@ func NewRTEScraper() *RTEScraper {
 // ScrapeArticles scrapes articles from the RTE news section
 func (s *RTEScraper) ScrapeArticles(category string) ([]Article, error) {
 	baseURL := fmt.Sprintf("https://www.rte.ie/news/%s/", category)
+	fmt.Printf("Visiting %s\n", baseURL)
+
+	// Create a temporary variable to store the current article being processed
+	var currentArticle Article
+	// Add a flag at the top of your ScrapeArticles function
+	var firstArticleFound bool = false
 
 	// Set up callbacks for the collector
 	s.collector.OnHTML("article", func(e *colly.HTMLElement) {
+
+		if firstArticleFound {
+			return
+		}
 		// Extract article details
-		article := Article{
-			Title:    strings.TrimSpace(e.ChildText("h1")),
+		currentArticle = Article{
+			Title:    strings.TrimSpace(e.ChildText("h3")),
 			URL:      e.Request.AbsoluteURL(e.ChildAttr("a", "href")),
 			Category: category,
 		}
 
+		// Set flag to true after finding first article
+		firstArticleFound = true
+
+		//fmt.Print(currentArticle)
+
 		// Only proceed if we found a valid article
-		if article.Title != "" && article.URL != "" {
-			// Visit the article page to get full content
-			s.collector.Visit(article.URL)
+		if currentArticle.Title != "" && currentArticle.URL != "" {
+			fmt.Printf("Visiting article URL: %s\n", currentArticle.URL)
+			e.Request.Visit(currentArticle.URL)
 		}
 	})
 
 	// Handle individual article pages
-	s.collector.OnHTML("div.article-body", func(e *colly.HTMLElement) {
-		content := []string{}
+	s.collector.OnHTML("section.medium-10.medium-offset-1.columns.article-body", func(e *colly.HTMLElement) {
+		var contentParts []string
+
+		// Extract all paragraphs within the article body
 		e.ForEach("p", func(_ int, p *colly.HTMLElement) {
 			text := strings.TrimSpace(p.Text)
 			if text != "" {
-				content = append(content, text)
+				contentParts = append(contentParts, text)
 			}
 		})
+		fmt.Println(contentParts)
 
 		// Get publish date
 		dateStr := e.ChildText("time")
-		publishDate, _ := time.Parse("2006-01-02 15:04:05", dateStr)
+		publishDate, err := time.Parse("2006-01-02 15:04:05", dateStr)
+		if err != nil {
+			// If date parsing fails, use current time and log the error
+			publishDate = time.Now()
+			fmt.Printf("Error parsing date '%s': %v\n", dateStr, err)
+		}
 
+		// Create the complete article
 		article := Article{
-			Title:       e.ChildText("h1"),
-			Content:     strings.Join(content, "\n"),
+			Title:       currentArticle.Title, // Use the title from the listing page
+			Content:     strings.Join(contentParts, "\n"),
 			URL:         e.Request.URL.String(),
 			PublishDate: publishDate,
 			Category:    category,
 			Author:      e.ChildText(".author"),
 		}
 
+		fmt.Printf("Processed article: %s\n", article.Title)
 		s.articles = append(s.articles, article)
 	})
 
 	// Error handling
 	s.collector.OnError(func(r *colly.Response, err error) {
-		log.Printf("Error scraping %s: %v", r.Request.URL, err)
+		fmt.Printf("Error scraping %s: %v\n", r.Request.URL, err)
 	})
 
 	// Start the scraping
@@ -108,16 +133,18 @@ func (s *RTEScraper) ScrapeArticles(category string) ([]Article, error) {
 	// Wait for scraping to finish
 	s.collector.Wait()
 
+	fmt.Printf("Scraped %d articles\n", len(s.articles))
 	return s.articles, nil
 }
 
 func main() {
 	scraper := NewRTEScraper()
-	
+	fmt.Print("Starting RTE Scraper..\n")
+
 	// Example: Scrape business articles
-	articles, err := scraper.ScrapeArticles("business")
+	articles, err := scraper.ScrapeArticles("politics")
 	if err != nil {
-		log.Fatalf("Failed to scrape articles: %v", err)
+		fmt.Printf("Failed to scrape articles: %v", err)
 	}
 
 	// Print results
