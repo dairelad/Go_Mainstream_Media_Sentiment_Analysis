@@ -9,31 +9,22 @@ A tool for analyzing political bias in media coverage of companies through senti
 - Automated news article collection from multiple sources
 - Sentiment analysis to detect political bias
 - Data visualization of sentiment trends over time
-- Support for multiple companies/topics
 - Export results to JSON for further analysis
 
 ## Prerequisites
-
 - Go 1.19 or later
-- News API key (register at https://newsapi.org)
-- Basic understanding of sentiment analysis concepts
 
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/media-sentiment-analysis
-cd media-sentiment-analysis
+git clone https://github.com/dairelad/Go_Mainstream_Media_Sentiment_Analysis.git
+cd Go_Mainstream_Media_Sentiment_Analysis
 ```
 
 2. Install dependencies:
 ```bash
 go mod tidy
-```
-
-3. Set up your environment variables:
-```bash
-export NEWS_API_KEY='your_api_key_here'
 ```
 
 ## Usage
@@ -97,19 +88,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- [News API](https://newsapi.org) for providing news data access
-- [sentiment](https://github.com/cdipaolo/sentiment) for sentiment analysis capabilities
-- [gonum/plot](https://github.com/gonum/plot) for visualization tools
-
-## Contact
-
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
-
-Project Link: [https://github.com/yourusername/media-sentiment-analysis](https://github.com/yourusername/media-sentiment-analysis)
-
-## Disclaimer
-
-This tool provides a simplified analysis of media bias and should not be considered definitive. Results should be interpreted as indicative rather than conclusive, and users are encouraged to perform their own verification of findings.
