@@ -1,5 +1,3 @@
-### Initial template generated with claude ai
-
 # Media Sentiment Analysis
 
 A tool for analyzing political bias in media coverage of companies through sentiment analysis. This project fetches news articles about specified companies and analyzes their sentiment to identify potential political leanings in their coverage.
@@ -39,13 +37,6 @@ go run main.go -company "Example Corp"
 go run main.go -company "Example Corp" -days 30 -sources "nytimes,wsj,reuters"
 ```
 
-### Configuration Options
-
-- `-company`: Name of the company to analyze (required)
-- `-days`: Number of days of articles to analyze (default: 30)
-- `-sources`: Comma-separated list of news sources (default: all available)
-- `-output`: Output file path for visualization (default: "sentiment_trends.png")
-
 ## Output
 
 The program generates several outputs:
@@ -67,23 +58,13 @@ The program generates several outputs:
 
 ## How It Works
 
-1. **Data Collection**: The program uses the News API to fetch recent articles about the specified company.
+1. **Data Collection**: The program scapes the target website.
 
 2. **Sentiment Analysis**: Each article is processed using sentiment analysis to determine its political leaning:
    - Negative scores (-1 to 0) suggest left-leaning coverage
    - Positive scores (0 to 1) suggest right-leaning coverage
 
 3. **Visualization**: Results are plotted showing trends over time and by news source.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## License
 
