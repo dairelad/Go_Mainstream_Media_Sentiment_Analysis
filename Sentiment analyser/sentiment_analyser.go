@@ -16,11 +16,11 @@ import (
 
 // Article represents a news article with its metadata and analysis
 type Article struct {
-	Title          string     `json:"title"`
-	Content        string     `json:"content"`
-	Source         string     `json:"source"`
-	PublishedDate  time.Time  `json:"published_date"`
-	SentimentScore *float64   `json:"sentiment_score,omitempty"`
+	Title          string    `json:"title"`
+	Content        string    `json:"content"`
+	Source         string    `json:"source"`
+	PublishedDate  time.Time `json:"published_date"`
+	SentimentScore *float64  `json:"sentiment_score,omitempty"`
 }
 
 // NewsCollector handles fetching articles from news APIs
@@ -43,14 +43,14 @@ func (nc *NewsCollector) FetchArticles(company string) ([]Article, error) {
 	// This is where you'd make the HTTP request to your chosen news API
 	// Example using NewsAPI endpoint:
 	/*
-	resp, err := nc.client.R().
-		SetQueryParams(map[string]string{
-			"q": company,
-			"apiKey": nc.apiKey,
-		}).
-		Get("https://newsapi.org/v2/everything")
+		resp, err := nc.client.R().
+			SetQueryParams(map[string]string{
+				"q": company,
+				"apiKey": nc.apiKey,
+			}).
+			Get("https://newsapi.org/v2/everything")
 	*/
-	
+
 	// Placeholder return
 	return []Article{}, nil
 }
